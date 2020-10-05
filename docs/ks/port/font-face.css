@@ -1,0 +1,15 @@
+@font-face {
+  /* Regular */
+  font-family: 'Circular';
+  font-style: normal;
+  font-weight: 400;
+  src: url("/download/18.34e656f817293245a8c945c8/1597741811844/lineto-circular-book.woff2") format("woff2"), url("/download/18.699b78e715c152d27e989ee/1510655024049/lineto-circular-book.woff") format("woff");
+}
+
+@font-face {
+  /* Regular */
+  font-family: 'Circular';
+  font-style: normal;
+  font-weight: 700;
+  src: url("/download/18.34e656f817293245a8c945c9/1597741811858/lineto-circular-bold.woff2") format("woff2"), url("/download/18.699b78e715c152d27e989ea/1510655024091/lineto-circular-bold.woff") format("woff");
+}
