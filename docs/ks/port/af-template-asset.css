@@ -383,6 +383,7 @@ body {
   background-color: #fff !important;
   color: #212529;
   margin: 0 !important;
+  font-size: 1em !important;
 }
 
 @media (max-width: 1023px) {
@@ -391,11 +392,43 @@ body {
   }
 }
 
+.af-ng .pagecontent .h1, .af-ng .pagecontent h1 {
+  font-size: 2.25rem;
+  line-height: 1.27778;
+}
+
+.af-ng .pagecontent .h2, .af-ng .pagecontent h2 {
+  font-size: 1.5rem;
+  line-height: 1.41667;
+}
+
+.af-ng .pagecontent .h3, .af-ng .pagecontent h3 {
+  font-size: 1.25rem;
+  line-height: 1.5;
+}
+
+.af-ng .pagecontent .h4, .af-ng .pagecontent h4 {
+  font-size: 1.125rem;
+  line-height: 1.55556;
+}
+
+.af-ng .pagecontent .normal {
+  font-size: 1rem;
+  line-height: 1.625;
+}
+
+@media (max-width: 759px) {
+  .af-ng .pagecontent li {
+    margin-left: 1.5em;
+  }
+}
+
 .af-ng .pageHeader {
   margin: 0;
   padding: 0;
   min-height: 0;
   background-image: none;
+  min-height: 0 !important;
 }
 
 .af-ng .buttonsField {
@@ -407,51 +440,106 @@ body {
 }
 
 .af-ng .sv-grid-ksgs12:first-child {
-  padding: 0;
+  max-width: none;
+  width: auto;
+  margin: 0 0 3em;
+  padding: 0 0 2em;
   background: #fff !important;
-  margin-bottom: 3em;
-  padding-bottom: 2em;
   box-shadow: none;
   border-radius: 0;
 }
 
+@media (max-width: 1170px) {
+  .af-ng .sv-grid-ksgs12:first-child {
+    padding: 0 15px 2em;
+  }
+}
+
+.af-ng .pagecontent {
+  padding: 0 !important;
+}
+
+.af-ng .breadcrumb {
+  max-width: 1170px;
+  margin: 0 auto;
+  padding: 0.75em 15px 0.5em;
+  border-radius: 0;
+  position: relative;
+  background: #f4f5f7;
+  color: #4a5157;
+  line-height: 1;
+}
+
+.af-ng .breadcrumb:before, .af-ng .breadcrumb:after {
+  content: "";
+  display: block;
+  background: #f4f5f7;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: calc(50vw - 50%);
+}
+
+.af-ng .breadcrumb:after {
+  right: calc((50vw - 50%) * -1);
+}
+
+.af-ng .breadcrumb:before {
+  left: calc((50vw - 50%) * -1);
+}
+
+.af-ng .breadcrumb a {
+  font-size: 0.9375rem !important;
+  color: #a0a0a8;
+  text-decoration: none;
+}
+
+.af-ng ul.nav.nav-tabs,
 .af-ng .nav-tabs {
   background: none !important;
   display: flex;
   justify-content: center;
 }
 
+.af-ng ul.nav.nav-tabs i,
 .af-ng .nav-tabs i {
   color: #3dbca2 !important;
 }
 
+.af-ng ul.nav.nav-tabs li,
 .af-ng .nav-tabs li {
   position: relative;
   z-index: 1;
   margin: 0 12px -1px;
 }
 
+.sv-column-6 .af-ng ul.nav.nav-tabs li,
+.af-ng ul.nav.nav-tabs li a, .sv-column-6
+.af-ng .nav-tabs li,
 .af-ng .nav-tabs li a {
-  font-size: 0.9375rem;
-  padding-right: 10px;
-  padding-left: 10px;
+  font-size: 0.9375rem !important;
   background-color: #f4f5f7 !important;
+  padding: 8px 10px !important;
   border: 1px solid #fff;
   border-top: 1px solid #f4f5f7;
   border-bottom: 1px solid #dee1e6;
 }
 
+.af-ng ul.nav.nav-tabs li.active,
 .af-ng .nav-tabs li.active {
   z-index: 2;
 }
 
+.af-ng ul.nav.nav-tabs li.active a,
 .af-ng .nav-tabs li.active a {
   background-color: #fff !important;
   border-top: 1px solid #dee1e6;
   border-bottom: 1px solid #fff;
 }
 
-.af-ng .nav-tabs li:before, .af-ng .nav-tabs li:after {
+.af-ng ul.nav.nav-tabs li:before, .af-ng ul.nav.nav-tabs li:after,
+.af-ng .nav-tabs li:before,
+.af-ng .nav-tabs li:after {
   content: "";
   display: block;
   position: absolute;
@@ -463,30 +551,58 @@ body {
   background-repeat: no-repeat !important;
 }
 
-.af-ng .nav-tabs li.active:before, .af-ng .nav-tabs li.active:after {
+.af-ng ul.nav.nav-tabs li.active:before, .af-ng ul.nav.nav-tabs li.active:after,
+.af-ng .nav-tabs li.active:before,
+.af-ng .nav-tabs li.active:after {
   height: 42px;
 }
 
+.af-ng ul.nav.nav-tabs li:before,
 .af-ng .nav-tabs li:before {
   left: -26px;
   background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMy45OCA0Ni43MDkiPjxwYXRoIGZpbGw9IiNmNGY1ZjciIHN0cm9rZT0iI2Y0ZjVmNyIgc3Ryb2tlLW1pdGVybGltaXQ9IjEwIiBkPSJNMzAuODI3LjVjLTUuMTczLjc1MS03Ljc3IDMuNzY2LTguMzE2IDguNTgybC00LjY4NCAyNC4zYy0uNzE4IDUuMjg4LTMuNjg0IDcuNi03Ljk1NSA4LjJILjYyMnY0LjYyOWgzMi42OVYuNXoiLz48L3N2Zz4=) !important;
   background-position: left top;
 }
 
+.af-ng ul.nav.nav-tabs li:after,
 .af-ng .nav-tabs li:after {
   right: -26px;
   background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMy45OCA0Ni43MDkiPjxwYXRoIGZpbGw9IiNmNGY1ZjciIHN0cm9rZT0iI2Y0ZjVmNyIgc3Ryb2tlLW1pdGVybGltaXQ9IjEwIiBkPSJNMy4wMDcuNWM1LjIxOS43NTEgNy44MzggMy43NjYgOC4zOSA4LjU4Mmw0LjcyNSAyNC4zYy43MjUgNS4yODggMy43MTcgNy42IDguMDI2IDguMmg5LjMzMnY0LjYyOUguNVYuNXoiLz48L3N2Zz4=) !important;
   background-position: right top;
 }
 
+.af-ng ul.nav.nav-tabs li.active:before,
 .af-ng .nav-tabs li.active:before {
   z-index: 2;
   background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMy45OCA0Ni43MDkiPjxwYXRoIGZpbGw9IiNmZmYiIHN0cm9rZT0iI2RlZTFlNiIgc3Ryb2tlLW1pdGVybGltaXQ9IjEwIiBkPSJNMzAuOTMyLjVjLTUuMjA5Ljc1MS03LjgyNCAzLjc2Ni04LjM3NSA4LjU4MmwtNC43MTcgMjQuM2MtLjcyMyA1LjI4OC0zLjcxMSA3LjYtOC4wMTIgOC4ySC41MTJ2NC42MjloMzIuOTIzVi41eiIvPjwvc3ZnPg==) !important;
 }
 
+.af-ng ul.nav.nav-tabs li.active:after,
 .af-ng .nav-tabs li.active:after {
   z-index: 2;
   background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMy45OCA0Ni43MDkiPjxwYXRoIGZpbGw9IiNmZmYiIHN0cm9rZT0iI2RlZTFlNiIgc3Ryb2tlLW1pdGVybGltaXQ9IjEwIiBkPSJNMy4wMDcuNWM1LjIxOS43NTEgNy44MzggMy43NjYgOC4zOSA4LjU4Mmw0LjcyNSAyNC4zYy43MjUgNS4yODggMy43MTcgNy42IDguMDI2IDguMmg5LjMzMnY0LjYyOUguNVYuNXoiLz48L3N2Zz4=) !important;
+}
+
+.af-ng .btn {
+  background: transparent;
+  color: #363940 !important;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.af-ng .pageFunctionButtons {
+  border-bottom: 1px solid #dee1e6;
+  margin: 0 0 40px !important;
+  padding: 0 0 30px !important;
+}
+
+.af-ng .pageFunctionButtons .btn {
+  border-right: 1px solid #dee1e6 !important;
+}
+
+.af-ng .pageFunctionButtons .btn:last-child {
+  border: none !important;
 }
 
 /**
@@ -517,6 +633,7 @@ body {
   }
 }
 
+.af-header__logo__navBtn,
 .af-navtoggler__btn {
   display: inline-block;
   -webkit-appearance: none;
@@ -536,6 +653,7 @@ body {
   text-align: left;
 }
 
+.af-header__logo__navBtn__ico,
 .af-navtoggler__btn__ico {
   display: block;
   width: 44px;
@@ -547,14 +665,22 @@ body {
   font-size: 24px;
 }
 
+.af-header__logo__navBtn__ico--close,
 .af-navtoggler__btn__ico--close {
   display: none;
 }
 
+.af-header__logo__navBtn__txt,
 .af-navtoggler__btn__txt {
   color: #fff;
   text-transform: uppercase;
   font-size: 14px;
+}
+
+.af-header__logo__navBtn {
+  padding: 0;
+  height: 48px;
+  line-height: 48px;
 }
 
 .af-header {
@@ -584,7 +710,13 @@ body {
   justify-content: space-between;
 }
 
-.af-header__logo {
+.af-header--small .af-header__top {
+  position: absolute;
+  top: 18px;
+  right: 0;
+}
+
+.af-header--large .af-header__logo {
   margin: 32px 0 12px;
   padding: 0 0 20px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.25);
@@ -598,7 +730,7 @@ body {
   }
 }
 
-.af-header__logo__lnk {
+.af-header--small .af-header__logo__lnk__txt, .af-header__logo__lnk {
   display: inline-block;
   padding: 0 0 0 62px;
   font-size: 26px;
@@ -614,7 +746,7 @@ body {
 }
 
 @media (max-width: 1023px) {
-  .af-header__logo__lnk {
+  .af-header--small .af-header__logo__lnk__txt, .af-header__logo__lnk {
     display: block;
     width: 48px;
     height: 48px;
@@ -624,7 +756,7 @@ body {
 }
 
 @media (max-width: 1023px) {
-  .af-header__logo__lnk__txt {
+  .af-header--small .af-header__logo__lnk__txt__txt, .af-header__logo__lnk__txt {
     position: absolute;
     overflow: hidden;
     clip: rect(0 0 0 0);
@@ -633,6 +765,44 @@ body {
     margin: -1px;
     padding: 0;
     border: 0;
+  }
+}
+
+@media (min-width: 1024px) {
+  .af-header--small .af-header__logo__lnk {
+    display: none;
+  }
+}
+
+.af-header--small .af-header__logo__lnk__txt {
+  padding: 0;
+  margin: 0 0 0 48px;
+}
+
+@media (max-width: 1023px) {
+  .af-header--small .af-header__logo__lnk__txt {
+    display: none;
+  }
+}
+
+.af-header__logo__navBtn {
+  position: absolute;
+}
+
+.af-header__logo__navBtn__txt {
+  position: absolute;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  height: 1px;
+  width: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+}
+
+@media (max-width: 1023px) {
+  .af-header__logo__navBtn {
+    display: none;
   }
 }
 
