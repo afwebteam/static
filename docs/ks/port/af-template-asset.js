@@ -14433,7 +14433,9 @@ _af.mql = {
     }
 
     $('.af-header').on('click', function (e) {
-        e.stopPropagation();
+        if ($(e.target).closest('#pageHeaderProfileLink').length === 0) {
+            e.stopPropagation();
+        }
     });
 
     $buttons.each(function (i, el) {
@@ -14581,7 +14583,7 @@ _af.mql = {
         },
 
         methods: {
-            open : function () {
+            open         : function () {
                 win.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
                 $html.addClass('af-noscroll');
                 $(this.$el).slideDown(200);
@@ -14589,7 +14591,7 @@ _af.mql = {
                 icon.$close.show();
                 this.visible = true;
             },
-            close : function (fast) {
+            close        : function (fast) {
                 $html.removeClass('af-noscroll');
                 if (fast) {
                     $(this.$el).hide();

@@ -392,6 +392,11 @@ body {
   }
 }
 
+#KED_PROFILE_PAGE_ELEM {
+  position: relative;
+  z-index: 2147483647;
+}
+
 .af-ng .pagecontent .h1, .af-ng .pagecontent h1 {
   font-size: 2.25rem;
   line-height: 1.27778;
