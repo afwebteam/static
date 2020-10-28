@@ -903,6 +903,11 @@ body {
   margin: 1em 0;
 }
 
+.af-header__tools__subitem--hr {
+  border-top: 1px solid #dee1e6;
+  padding: 1em 0 0;
+}
+
 .af-header__tools__subitem__header {
   display: block;
   color: #3dbca2;
@@ -1081,6 +1086,42 @@ body {
 .af-header__submenu .lvl2 a[href]:hover, .af-header__submenu .lvl2 a[href]:active, .af-header__submenu .lvl2 a[href]:focus, .af-header__submenu__item__lnk:hover, .af-header__submenu__item__lnk:active, .af-header__submenu__item__lnk:focus {
   color: #212529 !important;
   text-decoration: underline;
+}
+
+.af-header__stepsWrapper {
+  display: flex;
+  max-width: 1140px;
+  margin: 0 auto;
+  background-color: rgba(61, 188, 162, 0.1);
+}
+
+.af-header__steps {
+  background-color: rgba(255, 0, 0, 0.1);
+  flex: 0 0 25%;
+  max-width: 25%;
+}
+
+.af-header__steps .af-header__stepItems {
+  display: none;
+}
+
+.af-header__subSteps {
+  background-color: rgba(255, 165, 0, 0.1);
+  flex: 0 0 75%;
+  max-width: 75%;
+  display: flex;
+}
+
+.af-header__subSteps ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  flex: 0 0 33.33333%;
+  width: 33.33333%;
+}
+
+.af-header__subSteps ul ul {
+  display: none;
 }
 
 .af-mobileNav {

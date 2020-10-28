@@ -14294,6 +14294,25 @@ _af.mql = {
     desktop: window.matchMedia('(min-width: 1024px)')
 };
 
+/// STEPS NAV
+(function (win, doc, $, _) {
+
+    'use strict';
+
+    var $stepMenu = $('.af-header__submenus--steps'),
+        $stepsContainer = $('<div class="af-header__submenu__steps" />');
+
+    if ($stepMenu.length > 0) {
+        $stepMenu.each(function () {
+            $stepMenu.find('.af-header__submenu').last().after($stepsContainer);
+        });
+    }
+
+
+}(window, document, jQuery, _sv));
+
+
+
 (function ($, _) {
 
     'use strict';
@@ -14368,11 +14387,15 @@ _af.mql = {
 
     'use strict';
 
-    $('.af-header__tools__item__lnk.af-popover__button').each(function (i, el) {
-        var $el      = $(el),
-            $popover = $el.siblings('.af-header__tools__popover').first();
-        new _af.Popover($el, $popover);
-    });
+    if (document.querySelector('.af-header--small')) {
+
+    } else {
+        $('.af-header__tools__item__lnk.af-popover__button').each(function (i, el) {
+            var $el      = $(el),
+                $popover = $el.siblings('.af-header__tools__popover').first();
+            new _af.Popover($el, $popover);
+        });
+    }
 
 }(jQuery));
 
@@ -14385,28 +14408,32 @@ _af.mql = {
 
     var $overlay = $('.af-overlay'),
         $menus   = $('.af-header__submenus'),
-        $buttons = $('.af-header__menu__item__lnk');
+        $buttons = $('.af-header__menu__item__lnk'),
+        $content;
 
     function closeAll() {
-        $menus.slideUp(200);
-        $buttons.attr('aria-expanded', 'false');
+        $menus.stop().slideUp(200);
+        $buttons.each(function (i, b) { $(b).attr('aria-expanded', 'false'); });
         $overlay
+            .stop()
             .fadeOut(200)
             .off('click', closeAll);
     }
 
     function close($btn, $menu) {
-        $menu.slideUp(200);
         $btn.attr('aria-expanded', 'false');
+        $menu.stop().slideUp(200);
         $overlay
+            .stop()
             .fadeOut(200)
             .off('click', closeAll);
     }
 
     function open($btn, $menu, hasOpenMenu) {
-        $menu.slideDown(hasOpenMenu ? 0 : 200);
         $btn.attr('aria-expanded', 'true');
+        $menu.stop().slideDown(hasOpenMenu ? 0 : 200);
         $overlay
+            .stop()
             .fadeIn(100)
             .on('click', closeAll);
     }
@@ -14418,16 +14445,14 @@ _af.mql = {
         var $otherMenus = $menus.not($menu),
             hasOpenMenu = $otherMenus.filter(':visible').length > 0;
 
-        // Close other menus
-        $otherMenus.hide();
-        $buttons.not($btn).attr('aria-expanded', 'false');
-
         if ($btn.attr('aria-expanded') !== 'true') {
+            $otherMenus.stop().hide();
+            $buttons.each(function (i, b) { $(b).attr('aria-expanded', 'false'); });
             // Open menu
             open($btn, $menu, hasOpenMenu);
         } else {
             // Close menu
-            close($btn, $menu);
+            closeAll();
         }
 
     }
@@ -14446,6 +14471,32 @@ _af.mql = {
             handler : handleButton
         });
     });
+
+    if (document.querySelector('.af-header--small')) {
+        // af-header__logo__navBtn
+        $buttons = $('.af-header__logo__navBtn');
+        $content = $buttons.siblings('.af-popover__content');
+        // $buttons.after($content);
+        // // $content
+        // //     .append($('<div class="af-popover__arrow" data-popper-arrow" />'))
+        // //     .append($('.af-header__sites__items').first());
+        //
+        // console.log('$buttons');
+        // console.log($buttons);
+        // console.log($content);
+        new _af.Popover($buttons, $content);
+
+    } else {
+        $buttons.each(function (i, el) {
+            var $button = $(el);
+            $button.ariaToggler({
+                expanded: false,
+                controls: $button.siblings('.af-header__submenus'),
+                handler : handleButton
+            });
+        });
+    }
+
 
     _af.mql.desktop.addListener(function () {
         if (!_af.mql.desktop.matches) {
@@ -14486,6 +14537,7 @@ _af.mql = {
 //                '<div class="af-mobileNav__footer">' +
 //                '</div>' +
 //                '</div>';
+
 
 (function (win, doc, $, _) {
 
@@ -14632,3 +14684,5 @@ _af.mql = {
     });
 
 }(window, document, jQuery, _sv));
+
+
