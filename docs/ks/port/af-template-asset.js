@@ -14299,18 +14299,41 @@ _af.mql = {
 
     'use strict';
 
-    var $stepMenu = $('.af-header__submenus--steps'),
-        $stepsContainer = $('<div class="af-header__submenu__steps" />');
+    var TMPL = '<div class="af-header__subSteps">' +
+               '<ul><li v-for="item in items">{{ item }}</li></ul>' +
+               '</div>';
+
+    var $stepMenu = $('.af-header__steps');
+
+
+    function getData($root) {
+        var $items = $root.find('> li > a'),
+            items  = [];
+        $items.each(function (i, el) {
+            items.push(el.innerText);
+        });
+        return items;
+    }
 
     if ($stepMenu.length > 0) {
-        $stepMenu.each(function () {
-            $stepMenu.find('.af-header__submenu').last().after($stepsContainer);
+
+
+        $stepMenu.on('click', '.af-header__step__txt', function (e) {
+            console.log($(e.target).siblings('ul').find('> li'));
+
+            new Vue({
+                el      : $stepMenu.siblings('.af-header__subSteps')[ 0 ],
+                template: TMPL,
+                data    : {
+                    items: getData($(e.target).siblings('ul').first())
+                }
+            });
+
         });
     }
 
 
 }(window, document, jQuery, _sv));
-
 
 
 (function ($, _) {
