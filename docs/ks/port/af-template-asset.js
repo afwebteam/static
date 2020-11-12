@@ -12,28 +12,25 @@ window._sv = _.noConflict();
 
 
 (function (strPrototype) {
+  'use strict';
+  if (typeof strPrototype.startsWith !== 'function') {
+    strPrototype.startsWith = function (str) {
+      return this.slice (0, str.length) === str;
+    };
+  }
 
-    'use strict';
+  if (typeof strPrototype.endsWith !== 'function') {
+    strPrototype.endsWith = function (str) {
+      return this.slice (-str.length) === str;
+    };
+  }
 
-    if (typeof strPrototype.startsWith !== 'function') {
-        strPrototype.startsWith = function (str) {
-            return this.slice(0, str.length) === str;
-        };
-    }
-
-    if (typeof strPrototype.endsWith !== 'function') {
-        strPrototype.endsWith = function (str) {
-            return this.slice(-str.length) === str;
-        };
-    }
-
-    if (typeof strPrototype.capitalize !== 'function') {
-        strPrototype.capitalize = function () {
-            return this.charAt(0).toUpperCase() + this.slice(1);
-        };
-    }
-
-}(String.prototype));
+  if (typeof strPrototype.capitalize !== 'function') {
+    strPrototype.capitalize = function () {
+      return this.charAt (0).toUpperCase () + this.slice (1);
+    };
+  }
+}) (String.prototype);
 
 // ==|== Check if var is jQuery object ========================================================== //
 
@@ -14299,33 +14296,75 @@ _af.mql = {
 
     'use strict';
 
-    var TMPL = '<div class="af-header__subSteps">' +
-               '<ul><li v-for="item in items">{{ item }}</li></ul>' +
-               '</div>';
-
-    var $stepMenu = $('.af-header__steps');
+    var $stepMenu = $('.af-header__steps'),
+        vm;
 
 
-    function getData($root) {
+    function getData($root, level) {
         var $items = $root.find('> li > a'),
             items  = [];
+        level = level || 1;
         $items.each(function (i, el) {
-            items.push(el.innerText);
+            items.push({
+                txt     : el.innerText ? el.innerText.trim() : '[LÄNKTEXT]',
+                href    : el.href ? el.href : '#',
+                selected: false,
+                items   : level <= 2 ? getData($(el).siblings('ul'), level + 1) : null
+            });
         });
         return items;
     }
 
     if ($stepMenu.length > 0) {
 
+        _.each($stepMenu.find('.af-header__step__txt'), function (el) {
+            var $el = $(el);
+            if ($el.siblings('ul').find('> li').length > 0) {
+                $el.after('<button class="af-header__step__next">' +
+                          'Visa undersidor' +
+                          '</button>');
+            }
+        });
 
-        $stepMenu.on('click', '.af-header__step__txt', function (e) {
-            console.log($(e.target).siblings('ul').find('> li'));
+        $stepMenu.on('click', '.af-header__step__txt, .af-header__step__next', function (e) {
 
-            new Vue({
+            var $target = $(e.target),
+                items   = getData($target.siblings('ul').first());
+
+            $stepMenu.find('.af-header__step').each(function (i, el) {
+                $(el).removeClass('af-header__step--selected');
+            });
+            $target.parent().addClass('af-header__step--selected');
+
+            // Kill last Vue instance if it exists
+            vm && vm.$destroy();
+
+            vm = new Vue({
                 el      : $stepMenu.siblings('.af-header__subSteps')[ 0 ],
-                template: TMPL,
+                template: '#afStepMenu__template',
                 data    : {
-                    items: getData($(e.target).siblings('ul').first())
+                    items         : items,
+                    items_2       : [],
+                    items_3       : [],
+                    selectedItem_1: null,
+                    selectedItem_2: null
+                },
+                methods : {
+                    nextStep: function (e, item, level) {
+                        if (level === 1) {
+                            this.items_2 = (item.items && item.items.length > 0) ? item.items : [];
+                            this.items_3 = [];
+                            this.selectedItem_1 && (this.selectedItem_1.selected = false);
+                            this.selectedItem_2 && (this.selectedItem_2.selected = false);
+                            this.selectedItem_1 = item;
+                            this.selectedItem_2 = null;
+                        } else if (level === 2) {
+                            this.items_3 = (item.items && item.items.length > 0) ? item.items : [];
+                            this.selectedItem_2 && (this.selectedItem_2.selected = false);
+                            this.selectedItem_2 = item;
+                        }
+                        item.selected = true;
+                    }
                 }
             });
 
@@ -14432,20 +14471,11 @@ _af.mql = {
     var $overlay = $('.af-overlay'),
         $menus   = $('.af-header__submenus'),
         $buttons = $('.af-header__menu__item__lnk'),
-        $content;
+        $navButton, $content;
 
     function closeAll() {
         $menus.stop().slideUp(200);
         $buttons.each(function (i, b) { $(b).attr('aria-expanded', 'false'); });
-        $overlay
-            .stop()
-            .fadeOut(200)
-            .off('click', closeAll);
-    }
-
-    function close($btn, $menu) {
-        $btn.attr('aria-expanded', 'false');
-        $menu.stop().slideUp(200);
         $overlay
             .stop()
             .fadeOut(200)
@@ -14496,30 +14526,10 @@ _af.mql = {
     });
 
     if (document.querySelector('.af-header--small')) {
-        // af-header__logo__navBtn
-        $buttons = $('.af-header__logo__navBtn');
-        $content = $buttons.siblings('.af-popover__content');
-        // $buttons.after($content);
-        // // $content
-        // //     .append($('<div class="af-popover__arrow" data-popper-arrow" />'))
-        // //     .append($('.af-header__sites__items').first());
-        //
-        // console.log('$buttons');
-        // console.log($buttons);
-        // console.log($content);
-        new _af.Popover($buttons, $content);
-
-    } else {
-        $buttons.each(function (i, el) {
-            var $button = $(el);
-            $button.ariaToggler({
-                expanded: false,
-                controls: $button.siblings('.af-header__submenus'),
-                handler : handleButton
-            });
-        });
+        $navButton = $('.af-header__logo__navBtn').first();
+        $content = $navButton.siblings('.af-popover__content');
+        new _af.Popover($navButton, $content);
     }
-
 
     _af.mql.desktop.addListener(function () {
         if (!_af.mql.desktop.matches) {
@@ -14531,35 +14541,6 @@ _af.mql = {
 
 
 // ≈≈|≈≈ Mobile Navigation ≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈ //
-
-
-// var TEMPLATE = '<div id="afMobileNav" class="af-mobileNav af-mobileNav--beforeinit">' +
-//                '<ul class="af-mobileNav__items af-mobileNav__items--lvl1">' +
-//                '<li v-for="item in filteredItems" class="af-mobileNav__item">' +
-//
-//                '<a v-if="item.back" v-bind:href="\'#\' + item.href" v-on:click="toggleSubmenu(item, $event)" class="af-mobileNav__item__lnk af-mobileNav__item__lnk--back"><i class="fas fa-chevron-left"></i> {{ item.text }}</a>' +
-//                '<a v-else-if="item.toggler" v-bind:href="\'#\' + item.href" v-on:click="toggleSubmenu(item, $event)" class="af-mobileNav__item__lnk">{{ item.text }} <i class="fas fa-chevron-right"></i></a>' +
-//                '<a v-else v-bind:href="item.href" class="af-mobileNav__item__lnk">{{ item.text }} <i class="fas fa-chevron-right"></i></a>' +
-//
-//                // '<ul class="af-mobileNav__items" v-bind:id="item.href" v-bind:ref="item.href" v-show="item.visible">' +
-//                // '<li v-for="subitemHeader in item.items" class="af-mobileNav__items af-mobileNav__items--lvl2">' +
-//                //
-//                // '<a v-bind:href="\'#\' + item.href" v-on:click="toggleSubmenu(item.href, $event)" class="af-mobileNav__item__lnk">SH {{ subitemHeader.text }} <i class="fas fa-chevron-right"></i></a>' +
-//                //
-//                // '<ul class="af-mobileNav__items af-mobileNav__items--lvl3" v-bind:id="item" v-show="item.visible">' +
-//                // '<li v-for="subitem in subitemHeader.items" class="af-mobileNav__items">' +
-//                //
-//                // '<a v-if="subitem.href" href="#" class="af-mobileNav__item__lnk">{{ subitem.text }} <i class="fas fa-chevron-right"></i></a>' +
-//                //
-//                // '</li>' +
-//                // '</ul>' +
-//                // '</li>' +
-//                // '</ul>' +
-//                '</li>' +
-//                '</ul>' +
-//                '<div class="af-mobileNav__footer">' +
-//                '</div>' +
-//                '</div>';
 
 
 (function (win, doc, $, _) {
@@ -14577,60 +14558,149 @@ _af.mql = {
         };
 
 
-    function getData() {
+    function getRegularMenuData(id, iel2) {
 
-        $('.af-header__menu__item').each(function (i, el) {
+        var $lnk2 = $(iel2);
 
-            var $el  = $(el),
-                $lnk = $(el).find('.af-header__menu__txt').first(),
-                id   = _.slugify($lnk.text());
+        data[ id ] = [ {
+            toggler: true,
+            back   : true,
+            href   : 'navroot',
+            text   : 'Tillbaka'
+        } ];
 
-            data[ 'navroot' ].push({
-                toggler: true,
-                href   : id,
-                text   : $lnk.text()
+        $lnk2
+            .siblings('.af-header__submenu__items')
+            .find('a').each(function (i, iel3) {
+            var $lnk3 = $(iel3);
+            data[ id ].push({
+                toggler     : false,
+                toggleButton: false,
+                href        : $lnk3.attr('href'),
+                text        : $lnk3.text()
             });
+        });
 
-            data[ id ] = [ {
+    }
+
+    function getStepsMenuData(id, iel2) {
+
+        var $lnk2 = $(iel2),
+            $itms = $lnk2.siblings('ul').find('> li > a'),
+            id2   = id + '-' + _.slugify($lnk2.text());
+
+        data[ id ].push({
+            toggler     : false,
+            toggleButton: $itms.length > 0,
+            hrefID      : id2,
+            href        : $lnk2.attr('href'),
+            text        : $lnk2.text()
+        });
+
+        data[ id2 ] = [ {
+            toggler: true,
+            back   : true,
+            href   : 'navroot',
+            text   : 'Tillbaka'
+        } ];
+
+        $itms.each(function (i, iel3) {
+            var $lnk3  = $(iel3),
+                $itms2 = $lnk3.siblings('ul').find('> li > a'),
+                id3    = id2 + '-' + _.slugify($lnk3.text());
+            data[ id2 ].push({
+                toggler     : false,
+                toggleButton: $itms2.length > 0,
+                hrefID      : id3,
+                href        : $lnk3.attr('href'),
+                text        : $lnk3.text()
+            });
+            data[ id3 ] = [ {
                 toggler: true,
                 back   : true,
-                href   : 'navroot',
+                href   : id2,
                 text   : 'Tillbaka'
             } ];
 
-            $el.find('.af-header__submenu__wrapper').each(function (i, iel) {
+            $itms2.each(function (i, iel3) {
+                var $lnk4  = $(iel3),
+                    $itms3 = $lnk4.siblings('ul').find('> li > a'),
+                    id4    = id3 + '-' + _.slugify($lnk4.text());
+                data[ id3 ].push({
+                    toggler     : false,
+                    toggleButton: $itms3.length > 0,
+                    hrefID      : id4,
+                    href        : $lnk4.attr('href'),
+                    text        : $lnk4.text()
+                });
+                data[ id4 ] = [ {
+                    toggler: true,
+                    back   : true,
+                    href   : id3,
+                    text   : 'Tillbaka'
+                } ];
 
-                $(iel).find('.af-header__menu__txt').each(function (i, iel2) {
 
-                    var $lnk2 = $(iel2),
-                        id2   = id + '-' + _.slugify($lnk2.text());
-
-                    data[ id ].push({
-                        toggler: true,
-                        href   : id2,
-                        text   : $lnk2.text()
-                    });
-
-                    data[ id2 ] = [ {
-                        toggler: true,
-                        back   : true,
-                        href   : id,
-                        text   : 'Tillbaka'
-                    } ];
-
-                    $lnk2
-                        .siblings('.af-header__submenu__items')
-                        .find('.af-header__submenu__item__lnk').each(function (i, iel3) {
-                        var $lnk3 = $(iel3);
-                        data[ id2 ].push({
-                            toggler: false,
-                            href   : $lnk3.attr('href'),
-                            text   : $lnk3.text()
-                        });
+                $itms3.each(function (i, iel3) {
+                    var $lnk5 = $(iel3);
+                    data[ id4 ].push({
+                        toggler     : false,
+                        toggleButton: false,
+                        hrefID      : '#',
+                        href        : $lnk5.attr('href'),
+                        text        : $lnk5.text()
                     });
                 });
             });
+
+
         });
+
+
+    }
+
+    function getData() {
+
+        $('.af-header__menu__item').not('.af-header__menu__item--search')
+            .each(function (i, el) {
+
+                var $el  = $(el),
+                    $lnk = $(el).find('.af-header__menu__txt').first(),
+                    id   = _.slugify($lnk.text());
+
+                data[ 'navroot' ].push({
+                    toggler     : true,
+                    toggleButton: false,
+                    href        : id,
+                    text        : $lnk.text()
+                });
+
+                data[ id ] = [ {
+                    toggler     : true,
+                    toggleButton: false,
+                    back        : true,
+                    href        : 'navroot',
+                    text        : 'Tillbaka'
+                } ];
+
+                $el.find('.af-header__submenu__wrapper, .af-header__stepsWrapper')
+                    .each(function (i, iel) {
+
+                        if (iel.classList.contains('af-header__stepsWrapper')) {
+                            // Steps menu
+                            $(iel).find('.af-header__step__txt').each(function (i, iel2) {
+                                getStepsMenuData(id, iel2);
+                            });
+                        } else {
+                            // Regular menu
+                            $(iel).find('.af-header__menu__txt').each(function (i, iel2) {
+                                getRegularMenuData(id, iel2);
+                            });
+                        }
+
+
+                    });
+            });
 
         return data;
 
@@ -14690,6 +14760,10 @@ _af.mql = {
                     e.preventDefault();
                     item.visible = !item.visible;
                     this.listId = item.href;
+                } else if (item.toggleButton) {
+                    e.preventDefault();
+                    item.visible = !item.visible;
+                    this.listId = item.hrefID;
                 }
             }
         },
@@ -14705,6 +14779,8 @@ _af.mql = {
         }
 
     });
+
+    
 
 }(window, document, jQuery, _sv));
 

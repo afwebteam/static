@@ -1092,11 +1092,9 @@ body {
   display: flex;
   max-width: 1140px;
   margin: 0 auto;
-  background-color: rgba(61, 188, 162, 0.1);
 }
 
 .af-header__steps {
-  background-color: rgba(255, 0, 0, 0.1);
   flex: 0 0 25%;
   max-width: 25%;
 }
@@ -1106,7 +1104,6 @@ body {
 }
 
 .af-header__subSteps {
-  background-color: rgba(255, 165, 0, 0.1);
   flex: 0 0 75%;
   max-width: 75%;
   display: flex;
@@ -1120,8 +1117,61 @@ body {
   width: 33.33333%;
 }
 
-.af-header__subSteps ul ul {
-  display: none;
+.af-header__step, .af-header__subSteps__item {
+  position: relative;
+  min-height: 44px;
+  margin: 0 10px 0 0 !important;
+  background-color: #fff;
+}
+
+.af-header__step--selected, .af-header__subSteps__item--selected {
+  background-color: #f4f5f7;
+}
+
+.af-header__step__next, .af-header__subSteps__item__next {
+  display: inline-block;
+  -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none;
+  background-color: transparent;
+  border-style: none;
+  border-width: 0;
+  border-radius: 0;
+  box-shadow: none;
+  text-shadow: none;
+  text-decoration: none;
+  display: block;
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 44px;
+  height: 0;
+  padding: 44px 0 0;
+  margin: 0 !important;
+  overflow: hidden;
+  background-position: 50% 50%;
+  background-repeat: no-repeat;
+  background-size: auto 16px;
+}
+
+.af-header__step__next:hover, .af-header__step__next:active, .af-header__step__next:focus, .af-header__subSteps__item__next:hover, .af-header__subSteps__item__next:active, .af-header__subSteps__item__next:focus {
+  background-color: #eee;
+}
+
+.af-header__step__txt, .af-header__subSteps__item__lnk {
+  display: block;
+  font-size: 14px !important;
+  font-weight: normal;
+  color: #212529;
+  line-height: 1 !important;
+  padding: 15px 0 15px 10px !important;
+  margin: 0 44px 0 0 !important;
+  text-decoration: none;
+}
+
+.af-header__step__txt:hover, .af-header__step__txt:active, .af-header__step__txt:focus, .af-header__subSteps__item__lnk:hover, .af-header__subSteps__item__lnk:active, .af-header__subSteps__item__lnk:focus {
+  color: #212529 !important;
+  text-decoration: underline;
 }
 
 .af-mobileNav {
@@ -1150,6 +1200,10 @@ body {
   /* has to be scroll, not auto */
   -webkit-overflow-scrolling: touch;
   padding: 15px 10px;
+}
+
+.af-mobileNav__item {
+  position: relative;
 }
 
 .af-mobileNav__item__lnk, .af-mobileNav__item__heading {
@@ -1184,6 +1238,37 @@ body {
 
 .af-mobileNav__item__lnk--back:hover, .af-mobileNav__item__lnk--back:active, .af-mobileNav__item__lnk--back:focus {
   color: #3dbca2 !important;
+}
+
+.af-mobileNav__item__next {
+  display: inline-block;
+  -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none;
+  background-color: transparent;
+  border-style: none;
+  border-width: 0;
+  border-radius: 0;
+  box-shadow: none;
+  text-shadow: none;
+  text-decoration: none;
+  display: block;
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 44px;
+  height: 0;
+  padding: 44px 0 0;
+  margin: 0 !important;
+  overflow: hidden;
+  background-position: 50% 50%;
+  background-repeat: no-repeat;
+  background-size: auto 16px;
+  border-left: 1px solid #dee1e6;
+}
+
+.af-mobileNav__item__next:hover, .af-mobileNav__item__next:active, .af-mobileNav__item__next:focus {
+  background-color: #eee;
 }
 
 .af-mobileNav__footer {
@@ -1253,6 +1338,12 @@ body {
   padding: 20px 16px;
   border-radius: 6px;
   box-shadow: 0 10px 20px 0 rgba(0, 0, 0, 0.2), 0 2px 4px 0 rgba(0, 0, 0, 0.15);
+}
+
+.af-header__step__next,
+.af-header__subSteps__item__next,
+.af-mobileNav__item__next {
+  background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMjAgNTEyIiB3aWR0aD0iMzIwIiBoZWlnaHQ9IjMyMCI+PHBhdGggZD0iTTI4NS40NzYgMjcyLjk3MUw5MS4xMzIgNDY3LjMxNGMtOS4zNzMgOS4zNzMtMjQuNTY5IDkuMzczLTMzLjk0MSAwbC0yMi42NjctMjIuNjY3Yy05LjM1Ny05LjM1Ny05LjM3NS0yNC41MjItLjA0LTMzLjkwMUwxODguNTA1IDI1NiAzNC40ODQgMTAxLjI1NWMtOS4zMzUtOS4zNzktOS4zMTctMjQuNTQ0LjA0LTMzLjkwMWwyMi42NjctMjIuNjY3YzkuMzczLTkuMzczIDI0LjU2OS05LjM3MyAzMy45NDEgMEwyODUuNDc1IDIzOS4wM2M5LjM3MyA5LjM3MiA5LjM3MyAyNC41NjguMDAxIDMzLjk0MXoiLz48L3N2Zz4=);
 }
 
 .af-header__logo__lnk {
