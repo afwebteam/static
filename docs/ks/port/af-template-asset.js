@@ -14297,7 +14297,7 @@ _af.mql = {
     'use strict';
 
     var $stepMenu = $('.af-header__steps'),
-        vm;
+        $menus, vm;
 
 
     function getData($root, level) {
@@ -14317,21 +14317,37 @@ _af.mql = {
 
     if ($stepMenu.length > 0) {
 
-        _.each($stepMenu.find('.af-header__step__txt'), function (el) {
-            var $el = $(el);
-            if ($el.siblings('ul').find('> li').length > 0) {
-                $el.after('<button class="af-header__step__next">' +
-                          'Visa undersidor' +
-                          '</button>');
-            }
-        });
+        $menus = $stepMenu.find('.af-header__step__txt');
+
+        if ($menus.length > 0) {
+            _.each($stepMenu.find('.af-header__step__txt'), function (el) {
+                var $el = $(el);
+                if ($el.siblings('ul').find('> li').length > 0) {
+                    $el.after('<button class="af-header__step__next">' +
+                              'Visa undersidor' +
+                              '</button>');
+                }
+            });
+        } else {
+            $menus = $stepMenu.find('.af-header__step--noroot > ul > li');
+            _.each($menus, function (el) {
+                var $el = $(el);
+                if ($el.siblings('ul').find('> li').length > 0) {
+                    $el.after('<button class="af-header__step__next">' +
+                              'Visa undersidor' +
+                              '</button>');
+                }
+            });
+        }
+
 
         $stepMenu.on('click', '.af-header__step__txt, .af-header__step__next', function (e) {
 
-            var $target = $(e.target),
-                items   = getData($target.siblings('ul').first());
+            var $target       = $(e.target),
+                $thisStepMenu = $target.closest('.af-header__steps'),
+                items         = getData($target.siblings('ul').first());
 
-            $stepMenu.find('.af-header__step').each(function (i, el) {
+            $thisStepMenu.find('.af-header__step').each(function (i, el) {
                 $(el).removeClass('af-header__step--selected');
             });
             $target.parent().addClass('af-header__step--selected');
@@ -14340,7 +14356,7 @@ _af.mql = {
             vm && vm.$destroy();
 
             vm = new Vue({
-                el      : $stepMenu.siblings('.af-header__subSteps')[ 0 ],
+                el      : $thisStepMenu.siblings('.af-header__subSteps')[ 0 ],
                 template: '#afStepMenu__template',
                 data    : {
                     items         : items,
@@ -14779,7 +14795,6 @@ _af.mql = {
         }
 
     });
-
 
 
 }(window, document, jQuery, _sv));
