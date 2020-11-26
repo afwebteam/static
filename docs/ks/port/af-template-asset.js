@@ -14317,7 +14317,18 @@ _af.mql = {
 
     if ($stepMenu.length > 0) {
 
-        $menus = $stepMenu.find('.af-header__step__txt');
+        $stepMenu.find('.af-header__stepRoot > li').each(function (i, el) {
+            var $el         = $(el),
+                $lnk        = $el.find('> a'),
+                hasSubItems = $el.find('ul').length > 0;
+            $el.toggleClass('af-header__step lvl2');
+            $lnk.addClass('af-header__step__lnk');
+            if (hasSubItems) {
+                $lnk.after('<button class="af-header__step__next">Visa undersidor</button>');
+            }
+        });
+
+        $menus = $stepMenu.find('.af-header__step__txt, .af-header__step__lnk');
 
         if ($menus.length > 0) {
             _.each($stepMenu.find('.af-header__step__txt'), function (el) {
@@ -14329,7 +14340,8 @@ _af.mql = {
                 }
             });
         } else {
-            $menus = $stepMenu.find('.af-header__step--noroot > ul > li');
+            $menus = $stepMenu.find(
+                '.af-header__stepRoot > ul > li, .af-header__step--noroot > ul > li');
             _.each($menus, function (el) {
                 var $el = $(el);
                 if ($el.siblings('ul').find('> li').length > 0) {
@@ -14465,15 +14477,53 @@ _af.mql = {
 
     'use strict';
 
-    if (document.querySelector('.af-header--small')) {
-
-    } else {
+    if (!document.querySelector('.af-header--small')) {
         $('.af-header__tools__item__lnk.af-popover__button').each(function (i, el) {
             var $el      = $(el),
                 $popover = $el.siblings('.af-header__tools__popover').first();
             new _af.Popover($el, $popover);
         });
     }
+
+}(jQuery));
+
+(function ($) {
+
+    'use strict';
+
+    var $localLinks = $('#afPageHeader').find('.buttonsContainer li'),
+        $links      = $('<ul />');
+
+
+    if ($localLinks.length > 0) {
+
+        $links.append('<li class="af-header__tools__subitem">' +
+                      '<span class="af-header__tools__subitem__header">Navigering</span>' +
+                      '</li>');
+
+        $localLinks.each(function (i, el) {
+            var $a = $(el).find('a');
+            $links.append('<li class="af-header__tools__subitem">' +
+                          '<a class="af-header__tools__subitem__lnk"' +
+                          ' href="' + $a.attr('href') + '">' +
+                          $a.text() +
+                          '</a>' +
+                          '</li>');
+        });
+
+        $links.append('<li class="af-header__tools__subitem af-header__tools__subitem--hr"></li>');
+
+        $('#afPageHeaderPop').prepend($links.find('li'));
+        /*
+        * <li class="af-header__tools__subitem">
+           <a class="af-header__tools__subitem__lnk"
+              href="/4.569668861590eba0b7fc361c.html">
+               Inställningar
+           </a>
+       </li>
+       * */
+    }
+
 
 }(jQuery));
 
@@ -14564,13 +14614,16 @@ _af.mql = {
     'use strict';
 
     var
-        data    = { navroot: [] },
-        $html   = $(doc.documentElement),
-        $button = $('.af-navtoggler'),
+        data          = { navroot: [] },
+        $html         = $(doc.documentElement),
+        $menubutton   = $('.af-navtoggler'),
+        $searchbutton = $('.af-searchtoggler'),
 
-        icon    = {
-            $open : $button.find('.af-navtoggler__btn__ico--open'),
-            $close: $button.find('.af-navtoggler__btn__ico--close')
+        icon          = {
+            $open       : $menubutton.find('.af-navtoggler__btn__ico--open'),
+            $close      : $menubutton.find('.af-navtoggler__btn__ico--close'),
+            $searchopen : $searchbutton.find('.af-searchtoggler__btn__ico--open'),
+            $searchclose: $searchbutton.find('.af-searchtoggler__btn__ico--close')
         };
 
 
@@ -14704,9 +14757,10 @@ _af.mql = {
 
                         if (iel.classList.contains('af-header__stepsWrapper')) {
                             // Steps menu
-                            $(iel).find('.af-header__step__txt').each(function (i, iel2) {
-                                getStepsMenuData(id, iel2);
-                            });
+                            $(iel).find('.af-header__step__txt, .af-header__step__lnk')
+                                .each(function (i, iel2) {
+                                    getStepsMenuData(id, iel2);
+                                });
                         } else {
                             // Regular menu
                             $(iel).find('.af-header__menu__txt').each(function (i, iel2) {
@@ -14724,6 +14778,7 @@ _af.mql = {
 
     function getFooter() {
         // Fetch footer links
+        return 'KUKEN';
     }
 
     new Vue({
@@ -14732,9 +14787,10 @@ _af.mql = {
         template: '#afMobileNav__template',
 
         data: {
-            listId: 'navroot',
-            items : getData(),
-            footer: getFooter()
+            visibleElement: 'nav',
+            listId        : 'navroot',
+            items         : getData(),
+            footer        : getFooter()
         },
 
         computed: {
@@ -14748,8 +14804,17 @@ _af.mql = {
                 win.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
                 $html.addClass('af-noscroll');
                 $(this.$el).slideDown(200);
-                icon.$open.hide();
-                icon.$close.show();
+                if (this.visibleElement === 'nav') {
+                    icon.$open.hide();
+                    icon.$close.show();
+                    icon.$searchopen.show();
+                    icon.$searchclose.hide();
+                } else {
+                    icon.$open.show();
+                    icon.$close.hide();
+                    icon.$searchopen.hide();
+                    icon.$searchclose.show();
+                }
                 this.visible = true;
             },
             close        : function (fast) {
@@ -14759,15 +14824,18 @@ _af.mql = {
                 } else {
                     $(this.$el).slideUp(200);
                 }
-                icon.$close.hide();
                 icon.$open.show();
+                icon.$close.hide();
+                icon.$searchopen.show();
+                icon.$searchclose.hide();
                 this.visible = false;
             },
             toggle       : function (e) {
                 e.preventDefault();
-                if (this.visible) {
+                if (this.visibleElement === e.data && this.visible) {
                     this.close();
                 } else {
+                    this.visibleElement = e.data;
                     this.open();
                 }
             },
@@ -14785,8 +14853,9 @@ _af.mql = {
         },
 
         mounted: function () {
-            $(this.$el).removeClass('af-mobileNav--beforeinit').hide();
-            $button.on('click', this.toggle);
+            $(this.$el).removeClass('afMobileNav--beforeinit').hide();
+            $menubutton.on('click', null, 'nav', this.toggle);
+            $searchbutton.on('click', null, 'search', this.toggle);
             _af.mql.desktop.addListener($.proxy(function () {
                 if (_af.mql.desktop.matches) {
                     this.close(true);
@@ -14800,3 +14869,35 @@ _af.mql = {
 }(window, document, jQuery, _sv));
 
 
+(function ($) {
+
+    'use strict';
+
+    var $profileBtn         = $('#pageHeaderProfileLink'),
+        $placeholderDesktop = $('<div id="pageHeaderProfileLink_desktop" />'),
+        $placeholderMobile  = $('<div id="pageHeaderProfileLink_mobile" />');
+
+    function moveProfileButton() {
+        if (_af.mql.desktop.matches) {
+            $placeholderDesktop.append($profileBtn);
+        } else {
+            $placeholderMobile.append($profileBtn);
+        }
+    }
+
+    $profileBtn.before($placeholderDesktop);
+    $('.af-mobileNav__footer')
+        .append($placeholderMobile)
+        .append($('.af-header__tools__subitems').clone());
+
+    _af.mql.desktop.addListener(moveProfileButton);
+    // _af.mql.desktop.addListener($.proxy(function () {
+    //     if (_af.mql.desktop.matches) {
+    //         this.close(true);
+    //     }
+    // }, this));
+
+
+    moveProfileButton();
+
+}(jQuery));

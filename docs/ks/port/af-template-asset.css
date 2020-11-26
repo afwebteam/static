@@ -657,7 +657,8 @@ body {
   border: 0;
 }
 
-.af-navtoggler {
+.af-navtoggler,
+.af-searchtoggler {
   position: absolute;
   z-index: 2147483647;
   right: 15px;
@@ -666,13 +667,20 @@ body {
 }
 
 @media (min-width: 1024px) {
-  .af-navtoggler {
+  .af-navtoggler,
+  .af-searchtoggler {
     display: none;
   }
 }
 
+.af-searchtoggler {
+  left: 15px;
+  right: auto;
+}
+
 .af-header__logo__navBtn,
-.af-navtoggler__btn {
+.af-navtoggler__btn,
+.af-searchtoggler__btn {
   display: inline-block;
   -webkit-appearance: none;
      -moz-appearance: none;
@@ -692,7 +700,8 @@ body {
 }
 
 .af-header__logo__navBtn__ico,
-.af-navtoggler__btn__ico {
+.af-navtoggler__btn__ico,
+.af-searchtoggler__btn__ico {
   display: block;
   width: 44px;
   height: 44px;
@@ -704,12 +713,14 @@ body {
 }
 
 .af-header__logo__navBtn__ico--close,
-.af-navtoggler__btn__ico--close {
+.af-navtoggler__btn__ico--close,
+.af-searchtoggler__btn__ico--close {
   display: none;
 }
 
 .af-header__logo__navBtn__txt,
-.af-navtoggler__btn__txt {
+.af-navtoggler__btn__txt,
+.af-searchtoggler__btn__txt {
   color: #fff;
   text-transform: uppercase;
   font-size: 14px;
@@ -1152,6 +1163,16 @@ body {
   width: 33.33333%;
 }
 
+.af-header__stepRoot {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+.af-header__stepRoot .af-header__step ul {
+  display: none;
+}
+
 .af-header__step, .af-header__subSteps__item {
   position: relative;
   min-height: 44px;
@@ -1193,7 +1214,7 @@ body {
   background-color: #eee;
 }
 
-.af-header__step__txt, .af-header__subSteps__item__lnk {
+.af-header__step__txt, .af-header__step__lnk, .af-header__subSteps__item__lnk {
   display: block;
   font-size: 14px !important;
   font-weight: normal;
@@ -1204,9 +1225,47 @@ body {
   text-decoration: none;
 }
 
-.af-header__step__txt:hover, .af-header__step__txt:active, .af-header__step__txt:focus, .af-header__subSteps__item__lnk:hover, .af-header__subSteps__item__lnk:active, .af-header__subSteps__item__lnk:focus {
+.af-header__step__txt:hover, .af-header__step__txt:active, .af-header__step__txt:focus, .af-header__step__lnk:hover, .af-header__step__lnk:active, .af-header__step__lnk:focus, .af-header__subSteps__item__lnk:hover, .af-header__subSteps__item__lnk:active, .af-header__subSteps__item__lnk:focus {
   color: #212529 !important;
   text-decoration: underline;
+}
+
+.af-mobileSearch {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  padding: 20px;
+  background: #f1f2f4;
+  border-bottom: 1px solid #ced4da;
+  box-shadow: 2px 0px 8px #bbb;
+}
+
+.af-mobileSearch .search {
+  position: relative;
+}
+
+.af-mobileSearch .search .fa-search {
+  position: absolute;
+  top: 14px;
+  left: 18px;
+  font-size: 24px;
+  font-weight: bold;
+  color: #888;
+}
+
+.af-mobileSearch .search-field {
+  width: 100%;
+  font-size: 18px;
+  padding: 14px 14px 14px 54px;
+  border-radius: 50px;
+  line-height: 1;
+  border: 1px solid #ced4da;
+}
+
+.af-mobileSearch .search-field:focus {
+  outline: none;
+  border-color: #353a41;
 }
 
 .af-mobileNav {
@@ -1307,6 +1366,7 @@ body {
 }
 
 .af-mobileNav__footer {
+  position: relative;
   flex: 1 1 1%;
   background-color: #000;
   min-height: 120px;
