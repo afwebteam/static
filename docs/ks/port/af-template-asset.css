@@ -678,6 +678,13 @@ body {
   right: auto;
 }
 
+@media (max-width: 1023px) {
+  #pageHeaderProfileLink_desktop,
+  #pageHeaderProfileLink_desktop + #pageHeaderProfileLink {
+    display: none;
+  }
+}
+
 .af-header__logo__navBtn,
 .af-navtoggler__btn,
 .af-searchtoggler__btn {
@@ -1369,7 +1376,63 @@ body {
   position: relative;
   flex: 1 1 1%;
   background-color: #000;
-  min-height: 120px;
+  padding: 10px 15px;
+}
+
+.af-mobileNav__footer [class^="ProfileMenuWrapper-"] {
+  position: static;
+}
+
+.af-mobileNav__footer [class^="ProfileMenuWrapper-"] div {
+  display: block;
+  padding: 0;
+}
+
+.af-mobileNav__footer [class^="ProfileMenuWrapper-"] a {
+  display: block;
+  margin: 0;
+}
+
+.af-mobileNav__footer__nav__header {
+  display: block;
+}
+
+.af-mobileNav__footer__nav__body {
+  height: 0;
+  overflow: hidden;
+}
+
+.af-mobileNav__footer [class^="ProfileMenuWrapper-"] a, .af-mobileNav__footer__nav__header,
+.af-mobileNav__footer .af-header__tools__subitem__lnk {
+  position: relative;
+  display: block;
+  color: #929397 !important;
+  text-decoration: none;
+  padding: 12px 30px;
+  font-size: 15px;
+}
+
+.af-mobileNav__footer [class^="ProfileMenuWrapper-"] a i, .af-mobileNav__footer__nav__header i,
+.af-mobileNav__footer .af-header__tools__subitem__lnk i {
+  position: absolute;
+  top: 11px;
+  left: 0;
+  font-size: 20px !important;
+}
+
+.af-mobileNav__footer [class^="ProfileMenuWrapper-"] a i[class*=" fa-angle-"], .af-mobileNav__footer__nav__header i[class*=" fa-angle-"],
+.af-mobileNav__footer .af-header__tools__subitem__lnk i[class*=" fa-angle-"] {
+  left: auto;
+  right: 0;
+}
+
+.af-mobileNav__footer__nav__header {
+  border-top: 1px solid #929397;
+}
+
+.af-mobileNav__footer .af-header__tools__subitem__lnk {
+  color: #fff !important;
+  font-size: 14px;
 }
 
 .af-container {

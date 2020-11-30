@@ -14291,6 +14291,38 @@ _af.mql = {
     desktop: window.matchMedia('(min-width: 1024px)')
 };
 
+
+/*
+ * jQuery uiniqueId plugin
+ * Author: Henrik Ekelöf
+ *
+ * $('div').uniqueId(); => <div id="af-id-1" />
+ *
+ */
+
+_af.uniqueId = function (prefix) {
+
+    'use strict';
+
+    var i = 0,
+        id;
+
+    prefix = prefix || 'af-id-';
+
+    function getId(prefix) {
+        i += 1;
+        return prefix + i;
+    }
+
+    id = getId(prefix);
+
+    while (document.getElementById(id)) {
+        id = getId(prefix);
+    }
+    return id;
+
+};
+
 /// STEPS NAV
 (function (win, doc, $, _) {
 
@@ -14486,46 +14518,39 @@ _af.mql = {
     }
 
 }(jQuery));
-
-(function ($) {
-
-    'use strict';
-
-    var $localLinks = $('#afPageHeader').find('.buttonsContainer li'),
-        $links      = $('<ul />');
-
-
-    if ($localLinks.length > 0) {
-
-        $links.append('<li class="af-header__tools__subitem">' +
-                      '<span class="af-header__tools__subitem__header">Navigering</span>' +
-                      '</li>');
-
-        $localLinks.each(function (i, el) {
-            var $a = $(el).find('a');
-            $links.append('<li class="af-header__tools__subitem">' +
-                          '<a class="af-header__tools__subitem__lnk"' +
-                          ' href="' + $a.attr('href') + '">' +
-                          $a.text() +
-                          '</a>' +
-                          '</li>');
-        });
-
-        $links.append('<li class="af-header__tools__subitem af-header__tools__subitem--hr"></li>');
-
-        $('#afPageHeaderPop').prepend($links.find('li'));
-        /*
-        * <li class="af-header__tools__subitem">
-           <a class="af-header__tools__subitem__lnk"
-              href="/4.569668861590eba0b7fc361c.html">
-               Inställningar
-           </a>
-       </li>
-       * */
-    }
-
-
-}(jQuery));
+//
+// (function ($) {
+//
+//     'use strict';
+//
+//     var $localLinks = $('#afPageHeader').find('.buttonsContainer li'),
+//         $links      = $('<ul />');
+//
+//
+//     if ($localLinks.length > 0) {
+//
+//         $links.append('<li class="af-header__tools__subitem">' +
+//                       '<span class="af-header__tools__subitem__header">Navigering</span>' +
+//                       '</li>');
+//
+//         $localLinks.each(function (i, el) {
+//             var $a = $(el).find('a');
+//             $links.append('<li class="af-header__tools__subitem">' +
+//                           '<a class="af-header__tools__subitem__lnk"' +
+//                           ' href="' + $a.attr('href') + '">' +
+//                           $a.text() +
+//                           '</a>' +
+//                           '</li>');
+//         });
+//
+//         $links.append('<li class="af-header__tools__subitem af-header__tools__subitem--hr"></li>');
+//
+//         $('#afPageHeaderPop').prepend($links.find('li'));
+//
+//     }
+//
+//
+// }(jQuery));
 
 
 // ==|== Main Menu ============================================================================== //
@@ -14614,12 +14639,14 @@ _af.mql = {
     'use strict';
 
     var
-        data          = { navroot: [] },
-        $html         = $(doc.documentElement),
-        $menubutton   = $('.af-navtoggler'),
-        $searchbutton = $('.af-searchtoggler'),
+        data                = { navroot: [] },
+        $html               = $(doc.documentElement),
+        $menubutton         = $('.af-navtoggler'),
+        $searchbutton       = $('.af-searchtoggler'),
+        $profileBtn         = $('#pageHeaderProfileLink'),
+        $placeholderDesktop = $('#pageHeaderProfileLink_desktop'),
 
-        icon          = {
+        icon                = {
             $open       : $menubutton.find('.af-navtoggler__btn__ico--open'),
             $close      : $menubutton.find('.af-navtoggler__btn__ico--close'),
             $searchopen : $searchbutton.find('.af-searchtoggler__btn__ico--open'),
@@ -14778,7 +14805,73 @@ _af.mql = {
 
     function getFooter() {
         // Fetch footer links
-        return 'KUKEN';
+        console.log('FETCH');
+        console.log(_);
+        var tmpl  = _.template('<div id="<%= id %>" ' +
+                               'class="af-mobileNav__footer__nav">' +
+                               '<a id="<%= id1header %>" ' +
+                               'class="af-mobileNav__footer__nav__header" ' +
+                               'href="#<%= id1body %>" ' +
+                               'data-env-accordion ' +
+                               'aria-controls="<%= id1body %>">' +
+                               '<i class="far fa-star"></i> ' +
+                               'Personliga länkar' +
+                               '<i class="fas fa-angle-down"></i>' +
+                               '</a>' +
+                               '<div id="<%= id1body %>" ' +
+                               'class="af-mobileNav__footer__nav__body" ' +
+                               'class="env-accordion" ' +
+                               'aria-expanded="false" ' +
+                               'aria-labelledby="<%= id1header %>" ' +
+                               'data-parent="#<%= id %>">' +
+                               '<%= links1 %>' +
+                               '</div>' +
+                               '<a id="<%= id2header %>" ' +
+                               'class="af-mobileNav__footer__nav__header" ' +
+                               'href="#<%= id2body %>" ' +
+                               'data-env-accordion ' +
+                               'aria-controls="<%= id2body %>">' +
+                               '<i class="far fa-user-circle"></i> ' +
+                               'Användarkonto ' +
+                               '<i class="fas fa-angle-down"></i>' +
+                               '</a>' +
+                               '<div id="<%= id2body %>" ' +
+                               'class="af-mobileNav__footer__nav__body" ' +
+                               'class="env-accordion" ' +
+                               'aria-expanded="false" ' +
+                               'aria-labelledby="<%= id2header %>" ' +
+                               'data-parent="#<%= id %>">' +
+                               '<%= links2 %>' +
+                               '</div>' +
+                               '</div>'),
+            links = {
+                links1: '',
+                links2: ''
+            },
+            addTo = 'links1';
+        $('.af-header__tools__subitems li').each(function (i, el) {
+            var $el = $(el),
+                $a  = $el.find('a');
+            if ($a.length > 0) {
+                if (el.classList.contains('af-header__tools__subitem--hr')) {
+                    addTo = 'links2';
+                    console.log('---------------');
+                }
+                links[ addTo ] += $a[ 0 ].outerHTML;
+            }
+
+            console.log(el);
+            // _af.uniqueId
+        });
+        return tmpl({
+            id       : 'kukukuk',
+            id1header: 'kukukukH',
+            id1body  : 'kukukukB',
+            links1   : links.links1,
+            id2header: 'kukukukH2',
+            id2body  : 'kukukukB2',
+            links2   : links.links2
+        });
     }
 
     new Vue({
@@ -14790,7 +14883,7 @@ _af.mql = {
             visibleElement: 'nav',
             listId        : 'navroot',
             items         : getData(),
-            footer        : getFooter()
+            footerHTML    : getFooter()
         },
 
         computed: {
@@ -14801,8 +14894,13 @@ _af.mql = {
 
         methods: {
             open         : function () {
+                setTimeout(function () {
+                    var $placeholderMobile = $('#pageHeaderProfileLink_mobile');
+                    $placeholderMobile.append($profileBtn);
+                }, 1);
                 win.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
                 $html.addClass('af-noscroll');
+
                 $(this.$el).slideDown(200);
                 if (this.visibleElement === 'nav') {
                     icon.$open.hide();
@@ -14819,6 +14917,7 @@ _af.mql = {
             },
             close        : function (fast) {
                 $html.removeClass('af-noscroll');
+                $placeholderDesktop.append($profileBtn);
                 if (fast) {
                     $(this.$el).hide();
                 } else {
@@ -14832,6 +14931,7 @@ _af.mql = {
             },
             toggle       : function (e) {
                 e.preventDefault();
+                $placeholderDesktop.append($profileBtn);
                 if (this.visibleElement === e.data && this.visible) {
                     this.close();
                 } else {
@@ -14858,6 +14958,7 @@ _af.mql = {
             $searchbutton.on('click', null, 'search', this.toggle);
             _af.mql.desktop.addListener($.proxy(function () {
                 if (_af.mql.desktop.matches) {
+                    $placeholderDesktop.append($profileBtn);
                     this.close(true);
                 }
             }, this));
@@ -14873,31 +14974,31 @@ _af.mql = {
 
     'use strict';
 
-    var $profileBtn         = $('#pageHeaderProfileLink'),
-        $placeholderDesktop = $('<div id="pageHeaderProfileLink_desktop" />'),
-        $placeholderMobile  = $('<div id="pageHeaderProfileLink_mobile" />');
-
-    function moveProfileButton() {
-        if (_af.mql.desktop.matches) {
-            $placeholderDesktop.append($profileBtn);
-        } else {
-            $placeholderMobile.append($profileBtn);
-        }
-    }
-
-    $profileBtn.before($placeholderDesktop);
-    $('.af-mobileNav__footer')
-        .append($placeholderMobile)
-        .append($('.af-header__tools__subitems').clone());
-
-    _af.mql.desktop.addListener(moveProfileButton);
-    // _af.mql.desktop.addListener($.proxy(function () {
+    // var $profileBtn         = $('#pageHeaderProfileLink'),
+    //     $placeholderDesktop = $('<div id="pageHeaderProfileLink_desktop" />'),
+    //     $placeholderMobile  = $('<div id="pageHeaderProfileLink_mobile" />');
+    //
+    // function moveProfileButton() {
     //     if (_af.mql.desktop.matches) {
-    //         this.close(true);
+    //         $placeholderDesktop.append($profileBtn);
+    //     } else {
+    //         $placeholderMobile.append($profileBtn);
     //     }
-    // }, this));
-
-
-    moveProfileButton();
+    // }
+    //
+    // $profileBtn.before($placeholderDesktop);
+    // $('.af-mobileNav__footer')
+    //     .append($placeholderMobile)
+    //     .append($('.af-header__tools__subitems').clone());
+    //
+    // _af.mql.desktop.addListener(moveProfileButton);
+    // // _af.mql.desktop.addListener($.proxy(function () {
+    // //     if (_af.mql.desktop.matches) {
+    // //         this.close(true);
+    // //     }
+    // // }, this));
+    //
+    //
+    // moveProfileButton();
 
 }(jQuery));
