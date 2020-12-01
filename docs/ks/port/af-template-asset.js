@@ -14804,9 +14804,7 @@ _af.uniqueId = function (prefix) {
     }
 
     function getFooter() {
-        // Fetch footer links
-        console.log('FETCH');
-        console.log(_);
+
         var tmpl  = _.template('<div id="<%= id %>" ' +
                                'class="af-mobileNav__footer__nav">' +
                                '<a id="<%= id1header %>" ' +
@@ -14849,29 +14847,28 @@ _af.uniqueId = function (prefix) {
                 links2: ''
             },
             addTo = 'links1';
+
         $('.af-header__tools__subitems li').each(function (i, el) {
             var $el = $(el),
                 $a  = $el.find('a');
             if ($a.length > 0) {
                 if (el.classList.contains('af-header__tools__subitem--hr')) {
                     addTo = 'links2';
-                    console.log('---------------');
                 }
                 links[ addTo ] += $a[ 0 ].outerHTML;
             }
-
-            console.log(el);
-            // _af.uniqueId
         });
+
         return tmpl({
-            id       : 'kukukuk',
-            id1header: 'kukukukH',
-            id1body  : 'kukukukB',
+            id       : 'afMobileFooterNav',
+            id1header: 'afMobileFooterNav_1h',
+            id1body  : 'afMobileFooterNav_1b',
             links1   : links.links1,
-            id2header: 'kukukukH2',
-            id2body  : 'kukukukB2',
+            id2header: 'afMobileFooterNav_2h',
+            id2body  : 'afMobileFooterNav_2b',
             links2   : links.links2
         });
+
     }
 
     new Vue({
