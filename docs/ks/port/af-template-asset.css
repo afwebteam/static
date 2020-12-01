@@ -685,6 +685,12 @@ body {
   }
 }
 
+#pageHeaderProfileLink_desktop [class^="ProfileMenuWrapper-"],
+#pageHeaderProfileLink_desktop + #pageHeaderProfileLink [class^="ProfileMenuWrapper-"] {
+  white-space: nowrap;
+  position: static;
+}
+
 .af-header__logo__navBtn,
 .af-navtoggler__btn,
 .af-searchtoggler__btn {
